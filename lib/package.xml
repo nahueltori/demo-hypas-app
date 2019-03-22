@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="packaging" default="autoPackage" basedir=".">
+	<!-- Eclipse Path value -->
+	<property name="eclipsePath" value="${eclipse.home}" />
+	
+	<!-- get Maven local repository from pom.xml if set otherwise, set default Maven local repository path value -->
+	<condition property="m2LocalRepository" value="${settings.localRepository}" else="${user.home}\.m2\repository">
+		<isset property="m2LocalRepository"/>
+	</condition>
+
+	<!-- Classpath value -->
+	<path id="projectClassPath">
+		<fileset dir="${eclipsePath}\plugins">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Auto Package Ant Task -->
+	<taskdef name="autoPackage" classname="jp.co.kyoceramita.hypas.AutoPackage.task.AutoPackage">
+		<classpath refid="projectClassPath" />
+	</taskdef>
+
+	<!-- Convert Properties Ant Task -->
+	<taskdef name="convertProperties" classname="jp.co.kyoceramita.hypas.AutoPackage.task.ConvertProperties">
+		<classpath refid="projectClassPath" />
+	</taskdef>
+
+	<!-- Setting Launcher path -->
+	<path id="equinoxLauncherPath">
+		<fileset dir="${eclipsePath}\plugins">
+			<include name="org.eclipse.equinox.launcher*.jar" />
+		</fileset>
+	</path>
+	<property name="equinoxLauncher.path" refid="equinoxLauncherPath" />
+
+	<!-- Remote Install Ant Task -->
+	<taskdef name="autoInstall" classname="jp.co.kyoceramita.hypas.AutoPackage.task.RemoteInstall">
+		<classpath refid="projectClassPath" />
+	</taskdef>
+	
+	<!-- Remote Uninstall Ant Task -->
+	<taskdef name="autoUninstall" classname="jp.co.kyoceramita.hypas.AutoPackage.task.RemoteUninstall">
+		<classpath refid="projectClassPath" />
+	</taskdef>
+	
+	<!-- Setup Plugin Ant Task -->
+	<taskdef name="autoSetupPlugin" classname="jp.co.kyoceramita.hypas.AutoPackage.task.SetupPlugin">
+		<classpath refid="projectClassPath" />
+	</taskdef>
+	
+	<!-- Remote Install to Multiple MFPs Ant Task -->
+	<taskdef name="autoInstallMultipleMFPs" classname="jp.co.kyoceramita.hypas.AutoPackage.task.RemoteInstallMultipleMFPs">
+		<classpath refid="projectClassPath" />
+	</taskdef>
+	
+	<!-- autoPackage task parameters -->
+	<property name="destinationFolder" value=" " />
+	<property name="templateNumber" value="template3" />
+	<property name="regionCode" value="japan,eu,us,asia,aus,china,korea" />
+	<property name="projectName" value="Aplicacion" />
+	<property name="packageType" value="development" />
+	<property name="recompile" value="false" />
+	<!-- remoteInstall and remoteUninstall task parameters -->
+	<property name="packagePaths" value="" />
+	<property name="applicationNames" value=""/>
+	<property name="activationKeys" value=""/>
+	<property name="serialNo" value="" />
+	<property name="ipAddress" value="" />
+	<property name="snmpv3Username" value="" />
+	<property name="snmpv3Password" value="" />
+	<property name="mfpUsername" value="" />
+	<property name="mfpPassword" value="" />
+	<property name="removeAll" value="false" />
+	<!-- setupPlugin task parameter -->
+	<property name="localRepository" value="${m2LocalRepository}"/>
+	<!-- remote install to multiple MFPs task parameters -->
+	<property name="packagePath" value="" />
+	<property name="serialNos" value="" />
+	<property name="ipAddresses" value="" />
+	<property name="snmpv3Usernames" value="" />
+	<property name="snmpv3Passwords" value="" />
+	<property name="mfpUsernames" value="" />
+	<property name="mfpPasswords" value="" />
+
+	<!-- Ant Task that generates HyPAS Package -->
+	<target name="autoPackage" description="package creation">
+		<autoPackage destinationFolder="${destinationFolder}" projectName="${projectName}" regionCode="${regionCode}" templateNumber="${templateNumber}" baseDirectory="${basedir}" recompile="${recompile}"/>
+	</target>
+
+	<!-- Ant Task for converting .properties files -->
+	<target name="convertProperties" description="convert .properties files">
+		<convertProperties targetPath="../resource" targetFileName=".+\.properties" targetEncoding="UTF-8" conversionType="ASCII" createBackup="true" />
+	</target>
+	
+	<!-- Ant Task that sets up ANT and Maven custom plugin -->
+	<target name="autoSetupPlugin" description="setup plugin task">
+		<autoSetupPlugin localRepository="${localRepository}"/>
+	</target>
+		
+	<!-- Ant Task to generate HyPAS Package using command prompt -->
+	<target name="createPackage" description="command prompt package creation">		
+		<!-- Javascript for getting workspace path -->		
+		<script language="javascript"> 
+			project.setProperty("workspacePath",(project.getProperty("basedir")+"").replace(/(\\([A-Z\a-z_\-\s0-9\.]+)+)\\lib$/, ""));
+		</script>							
+		<exec failonerror="true" executable="java">
+			<arg value="-jar" />
+			<arg value="${equinoxLauncher.path}" />
+			<arg value="-application" />
+			<arg value="org.eclipse.ant.core.antRunner" />
+			<arg value="-data" />
+			<arg value="${workspacePath}" />
+			<arg value="-buildfile" />
+			<arg value="${basedir}\package.xml" />
+			<arg value="-DtemplateNumber=${templateNumber}" />
+			<arg value="-DregionCode=${regionCode}" />
+			<arg value="-DprojectName=${projectName}" />			
+			<arg value="-DdestinationFolder=${destinationFolder}" />
+			<arg value="-Drecompile=${recompile}" />
+			<arg value="autoPackage" />
+		</exec>
+	</target>
+	
+	<!-- Ant Task for remote installation using command prompt -->
+	<target name="remoteInstall" description="command prompt remote installation">		
+		<!-- Javascript for getting workspace path -->		
+		<script language="javascript"> 
+			project.setProperty("workspacePath",(project.getProperty("basedir")+"").replace(/(\\([A-Z\a-z_\-\s0-9\.]+)+)\\lib$/, ""));
+		</script>							
+		<exec failonerror="true" executable="java">
+			<arg value="-jar" />
+			<arg value="${equinoxLauncher.path}" />
+			<arg value="-application" />
+			<arg value="org.eclipse.ant.core.antRunner" />
+			<arg value="-data" />
+			<arg value="${workspacePath}" />
+			<arg value="-buildfile" />
+			<arg value="${basedir}\package.xml" />
+			<arg value="-DpackagePaths=${packagePaths}" />				
+			<arg value="-DactivationKeys=${activationKeys}" />
+			<arg value="-DserialNo=${serialNo}" />
+			<arg value="-DipAddress=${ipAddress}" />
+			<arg value="-Dsnmpv3Username=${snmpv3Username}" />
+			<arg value="-Dsnmpv3Password=${snmpv3Password}" />
+			<arg value="-DmfpUsername=${mfpUsername}" />
+			<arg value="-DmfpPassword=${mfpPassword}" />
+			<arg value="autoInstall" />
+		</exec>
+	</target>
+	
+	<!-- Ant Task for remote uninstallation using command prompt -->
+	<target name="remoteUninstall" description="command prompt remote uninstallation">		
+		<!-- Javascript for getting workspace path -->		
+		<script language="javascript"> 
+			project.setProperty("workspacePath",(project.getProperty("basedir")+"").replace(/(\\([A-Z\a-z_\-\s0-9\.]+)+)\\lib$/, ""));
+		</script>							
+		<exec failonerror="true" executable="java">
+			<arg value="-jar" />
+			<arg value="${equinoxLauncher.path}" />
+			<arg value="-application" />
+			<arg value="org.eclipse.ant.core.antRunner" />
+			<arg value="-data" />
+			<arg value="${workspacePath}" />
+			<arg value="-buildfile" />
+			<arg value="${basedir}\package.xml" />
+			<arg value="-DapplicationNames=${applicationNames}" />
+			<arg value="-DserialNo=${serialNo}" />
+			<arg value="-DipAddress=${ipAddress}" />
+			<arg value="-Dsnmpv3Username=${snmpv3Username}" />
+			<arg value="-Dsnmpv3Password=${snmpv3Password}" />
+			<arg value="-DmfpUsername=${mfpUsername}" />
+			<arg value="-DmfpPassword=${mfpPassword}" />
+			<arg value="-DremoveAll=${removeAll}" />
+			<arg value="autoUninstall" />
+		</exec>
+	</target>
+	
+	<!-- Ant Task for installing ANT and Maven custom plugins from command prompt -->
+	<target name="setupPlugin" description="install ANT and Maven custom plugins to local repository">
+		<!-- Javascript for getting workspace path -->		
+		<script language="javascript"> 
+			project.setProperty("workspacePath",(project.getProperty("basedir")+"").replace(/(\\([A-Z\a-z_\-\s0-9\.]+)+)\\lib$/, ""));
+		</script>							
+		<exec failonerror="true" executable="java">
+			<arg value="-jar" />
+			<arg value="${equinoxLauncher.path}" />
+			<arg value="-application" />
+			<arg value="org.eclipse.ant.core.antRunner" />
+			<arg value="-data" />
+			<arg value="${workspacePath}" />
+			<arg value="-buildfile" />
+			<arg value="${basedir}\package.xml" />
+			<arg value="-DlocalRepository=${localRepository}" />
+			<arg value="autoSetupPlugin" />
+		</exec>	
+	</target>
+	
+	<!-- Ant Task for remote installation to multiple MFPs using command prompt -->
+	<target name="remoteInstallMultipleMFPs" description="command prompt remote installation to multiple MFPs">		
+		<!-- Javascript for getting workspace path -->		
+		<script language="javascript"> 
+			project.setProperty("workspacePath",(project.getProperty("basedir")+"").replace(/(\\([A-Z\a-z_\-\s0-9\.]+)+)\\lib$/, ""));
+		</script>							
+		<exec failonerror="true" executable="java">
+			<arg value="-jar" />
+			<arg value="${equinoxLauncher.path}" />
+			<arg value="-application" />
+			<arg value="org.eclipse.ant.core.antRunner" />
+			<arg value="-data" />
+			<arg value="${workspacePath}" />
+			<arg value="-buildfile" />
+			<arg value="${basedir}\package.xml" />
+			<arg value="-DpackagePath=${packagePath}" />				
+			<arg value="-DactivationKeys=${activationKeys}" />
+			<arg value="-DserialNos=${serialNos}" />
+			<arg value="-DipAddresses=${ipAddresses}" />
+			<arg value="-Dsnmpv3Usernames=${snmpv3Usernames}" />
+			<arg value="-Dsnmpv3Passwords=${snmpv3Passwords}" />
+			<arg value="-DmfpUsernames=${mfpUsernames}" />
+			<arg value="-DmfpPasswords=${mfpPasswords}" />
+			<arg value="autoInstallMultipleMFPs" />
+		</exec>
+	</target>
+	
+	<!-- Ant Task for remote installation -->
+	<target name="autoInstall" description="remote installation">
+		<autoInstall packagePaths="${packagePaths}" activationKeys="${activationKeys}" serialNo="${serialNo}" ipAddress="${ipAddress}" snmpv3Username="${snmpv3Username}" snmpv3Password="${snmpv3Password}" mfpUsername="${mfpUsername}" mfpPassword="${mfpPassword}" />		
+	</target>
+	
+	<!-- Ant Task for remote uninstallation -->
+	<target name="autoUninstall" description="remote uninstallation">
+		<autoUninstall applicationNames="${applicationNames}" serialNo="${serialNo}" ipAddress="${ipAddress}" snmpv3Username="${snmpv3Username}" snmpv3Password="${snmpv3Password}" mfpUsername="${mfpUsername}" mfpPassword="${mfpPassword}" removeAll="${removeAll}"/>		
+	</target>
+	
+	<!-- Ant Task for remote installation to multiple MFPs -->
+	<target name="autoInstallMultipleMFPs" description="remote installation to multiple MFPs">
+		<autoInstallMultipleMFPs packagePath="${packagePath}" activationKeys="${activationKeys}" serialNos="${serialNos}" ipAddresses="${ipAddresses}" snmpv3Usernames="${snmpv3Usernames}" snmpv3Passwords="${snmpv3Passwords}" mfpUsernames="${mfpUsernames}" mfpPasswords="${mfpPasswords}"/>		
+	</target>
+</project>

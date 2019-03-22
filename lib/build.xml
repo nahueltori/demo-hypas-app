@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="mfpapl" default="jspc"  basedir=".">
+	
+ <property name="dottemp" value=".temp" />
+ <property name="webinf" value="WEB-INF" />
+ <property name="tld" value="tld" />
+ <property name="tldFile" value="HyPASPalette.tld" />
+ 
+ <!-- JSP PreCompile -->
+ <target name="prepare">
+  <available property="file.exists" file="${basedir}/../${webinf}/${tld}/${tldFile}"/>
+  <mkdir dir="${basedir}/${dottemp}/${webinf}/${tld}" />
+ </target> 
+	
+ <target name="copy" depends="prepare" if="file.exists">
+  <copy todir="${basedir}/${dottemp}/${webinf}/${tld}">
+   <fileset dir="${basedir}/../${webinf}/${tld}">
+    <include name="**/*.tld"/>
+   </fileset>
+  </copy>
+ </target>
+	
+ <target name="jspc" depends="copy">
+  <taskdef classname="org.apache.jasper.JspC" name="jasper2" >
+   <classpath id="jspc.classpath">
+    <fileset dir="${basedir}">
+     <include name="jasper-compiler.jar"/>
+     <include name="jasper-runtime.jar"/>
+     <include name="jsp-api.jar"/>
+     <include name="servlet-api.jar"/>
+    </fileset>
+   	<path location="${basedir}/../bin" />
+   </classpath>
+  </taskdef>
+  <jasper2 
+   validateXml="false" 
+   uriroot="${basedir}/${dottemp}" 
+   outputDir="${basedir}/../src/jsp" 
+   package="jsp" />
+  <delete file="${basedir}/${dottemp}/**/*.jsp" />
+  <delete dir="${basedir}/${dottemp}" />
+ </target> 
+
+</project>

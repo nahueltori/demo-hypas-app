@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><web-app>
+  <servlet>
+    <servlet-name>appservlet</servlet-name>
+    <servlet-class>aplicacion.AppServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>stateservlet</servlet-name>
+    <servlet-class>aplicacion.StateServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>appservlet</servlet-name>
+    <url-pattern>/servlet/appservlet.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>stateservlet</servlet-name>
+    <url-pattern>/servlet/stateservlet.do</url-pattern>
+  </servlet-mapping>
+  
+ <Context path="/Aplicacion"/>
+
+</web-app>

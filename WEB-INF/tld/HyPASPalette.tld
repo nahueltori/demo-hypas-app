@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+            web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>hypas</short-name>
+	<uri>HyPAS</uri>
+
+    <!-- form -->
+	<tag>
+		<name>form</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description></description>
+	</tag>
+
+    <!-- Large Message -->
+	<tag>
+		<name>message_large</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description>This text's size is appropriate for the panel.</description>
+	</tag>
+
+    <!-- Medium Message -->
+	<tag>
+		<name>message_medium</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description>This text's size is appropriate for the panel.</description>
+	</tag>
+
+    <!-- Small Message -->
+	<tag>
+		<name>message_small</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description>This text's size is appropriate for the panel.</description>
+	</tag>
+
+	<!-- button -->
+	<tag>
+		<name>button</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description>This button's size is appropriate for the panel.</description>
+	</tag>
+
+    <!-- Input of Text Type -->
+	<tag>
+		<name>input_text</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description>This text type input's size is appropriate for the panel.</description>
+	</tag>
+
+    <!-- text area -->
+	<tag>
+		<name>text_area</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description>This text area's size is appropriate for the panel.</description>
+	</tag>
+
+    <!-- table -->
+	<tag>
+		<name>table</name>
+		<tag-class>null</tag-class>
+		<body-content>empty</body-content>
+		<description>This table's size is appropriate for the panel.</description>
+	</tag>
+
+</taglib>
+

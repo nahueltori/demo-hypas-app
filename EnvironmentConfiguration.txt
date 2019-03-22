@@ -1,0 +1,8 @@
+Windows 7
+Eclipse Version: Luna Service Release 2 (4.4.2)
+Java SDK: Java ME SDK 3.0 for Windows. http://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-javame-419430.html#sun_java_me_sdk-3.0-rr-oth-JPR
+Librería JSON para Java: json-20070829.jar. https://mvnrepository.com/artifact/org.json/json
+Javascript Version: 1.5
+JQuery: version 1.1
+HyPAS SDK for Embedded (plugin para Eclipse: Version 1.6.12.v201801101107
+Protocolo de conexión: HTTP. (HTTPS da error SocketException - Connection reset)

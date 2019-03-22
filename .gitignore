@@ -1,0 +1,13 @@
+.metadata
+.classpath
+.project
+.idea
+bin
+*.local
+*.zip
+*.class
+*.ipr
+*.iml
+*.iws
+*.iml
+*.cer
