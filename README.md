@@ -1,8 +1,9 @@
 # Application for HyPas
 
-Aplicación que permite utilizar las funcionalidades de un servicio web desde un equipo Kyocera.
-Desarollada para la plataforma HyPas de Kyocera.
+Application that enables to use the functionalities of a webservice from a Kyocera multi-functional printer.
+Developed for the Kyocera HyPas platform.
 
-## Primera versión
+## First version
 
-Escaneo de documentos y subida a un servicio web.
+Scanning of a document in PDF format and upload to a webservice.
+
